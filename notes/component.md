@@ -1,0 +1,74 @@
+1. Sur cette page, je voudrais faire afficher un composant en particulier.
+2. Dans header.php je trouve un menu déroulant de cpu où j'ajoute dans le lien 
+?type=cpu&id=<?= $cpu['id'] ?> pour afficher un cpu.
+
+<a class="dropdown-item" href="/component.php?type=cpu&id=<?= $cpu['id'] ?>">
+
+3. Je crée la méthode findById dans la class Cpu qui va configurer la connexion à la basse de donées, qui va faire une requette préparée, puis l'executer, je récupère les résultat de la requette avec un fetch. Si jamais, le résultat a donné faux, cela veut dire que j'ai demandé un cpu qui n'existe pas, j'envoie null dans ce cas-là, sinon, je renvoie un nouvel objet cpu.
+
+  static public function findById(int $id)
+    {
+        // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        $statement = $databaseHandler->prepare('SELECT
+            `cpus`.*,
+            `brands`.`name` as `brand_name`,
+            `brands`.`country` as `brand_country`
+            FROM `cpus`
+            JOIN `brands` ON `cpus`.`brand_id` = `brands`.`id`
+            WHERE `cpus`.`id` = :id
+        ');
+        $statement->execute([':id' => $id]);
+        $cpuData = $statement->fetch();
+        if ($cpuData === false) {
+            return null;
+        }
+        return new Cpu(
+            $cpuData['id'],
+            $cpuData['name'],
+            $cpuData['price'],
+            new Brand(
+                $cpuData['brand_id'],
+                $cpuData['brand_name'],
+                $cpuData['brand_country']
+            ),
+            $cpuData['clock'],
+            $cpuData['cores']
+        );
+    }
+
+4. J'ajoute un switch
+
+Je prends la valeur de $_GET['type], et si cette valeur est cpu, je fais ceci, sinon, si cette valeur est gpu, je ferrais ca etc.
+
+switch ($_GET['type']) {
+    case 'cpu':
+        $component = Cpu::findById($_GET['id']);
+        break;
+    case 'gpu':
+        break;
+    case 'hdd':
+        break;
+    case 'os':
+        break;
+    case 'ram':
+        break;
+    default:
+        throw new Exception('Unkown omponent type "' . $_GET['type'] . '".');
+}
+
+5. J'inclus le fichier Cpu.php dans component.php.
+
+require_once './models/Cpu.php';
+
+6. Je cherche le nom, la marque, le prix de cpu.
+ 
+<div class="container">
+    <h1><?= $component->getName() ?></h1>
+    <ul>
+        <li>Type de composant</li>
+        <li>Marque: <?= $component->getBrand()->getName() ?></li>
+        <li>Prix: <?= $component->getPrice() ?>€</li>
+        <li>Caractéristiques supplémentaires</li>
+    </ul>
+</div>

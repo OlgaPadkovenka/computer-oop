@@ -159,4 +159,35 @@ class Cpu
         }
         return $cpus;
     }
+
+    static public function findById(int $id)
+    {
+        // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        $statement = $databaseHandler->prepare('SELECT
+            `cpus`.*,
+            `brands`.`name` as `brand_name`,
+            `brands`.`country` as `brand_country`
+            FROM `cpus`
+            JOIN `brands` ON `cpus`.`brand_id` = `brands`.`id`
+            WHERE `cpus`.`id` = :id
+        ');
+        $statement->execute([':id' => $id]);
+        $cpuData = $statement->fetch();
+        if ($cpuData === false) {
+            return null;
+        }
+        return new Cpu(
+            $cpuData['id'],
+            $cpuData['name'],
+            $cpuData['price'],
+            new Brand(
+                $cpuData['brand_id'],
+                $cpuData['brand_name'],
+                $cpuData['brand_country']
+            ),
+            $cpuData['clock'],
+            $cpuData['cores']
+        );
+    }
 }
