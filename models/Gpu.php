@@ -31,6 +31,56 @@ class Gpu
      */
     private int $ram;
 
+
+    /**
+     * Récupère tous les cartes graphiques en base de données
+     *
+     * @return Gpu[]
+     */
+    static public function findAll(): array
+    {
+        // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        // Envoie une requête dans le serveur de base de données
+        $statement = $databaseHandler->query('SELECT * FROM `gpus`');
+        // Récupère tous les résultats de la requête
+        foreach ($statement->fetchAll() as $gpuData) {
+            $gpus[] = new Gpu(
+                $gpuData['id'],
+                $gpuData['name'],
+                $gpuData['price'],
+                Brand::findById($gpuData['brand_id']),
+                $gpuData['ram']
+            );
+        }
+        return $gpus;
+    }
+
+    /**
+     * Récupère un processeur en base de données en fonction de son identifiant
+     *
+     * @param integer $id
+     * @return void
+     */
+    static public function findById(int $id)
+    {
+        // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        $statement = $databaseHandler->prepare('SELECT * FROM `gpus`');
+        $statement->execute([':id' => $id]);
+        $gpuData = $statement->fetch();
+        if ($gpuData === false) {
+            return null;
+        }
+        return new Gpu(
+            $gpuData['id'],
+            $gpuData['name'],
+            $gpuData['price'],
+            Brand::findById($gpuData['brand_id']),
+            $gpuData['ram']
+        );
+    }
+
     /**
      * Crée un nouveau composant
      *

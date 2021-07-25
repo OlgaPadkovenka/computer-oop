@@ -1,7 +1,12 @@
 <?php
+
+
+
 include './models/Cpu.php';
 include './models/Gpu.php';
 require_once 'data/config.php';
+
+
 
 ?>
 

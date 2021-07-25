@@ -38,6 +38,52 @@ class Hdd
      */
     private int $type;
 
+    static public function findAll(): array
+    {
+        // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        // Envoie une requête dans le serveur de base de données
+        $statement = $databaseHandler->prepare('SELECT * FROM `hdds`');
+        // Récupère tous les résultats de la requête
+        foreach ($statement->fetchAll() as $hddData) {
+            $hdds[] = new Hdd(
+                $hddData['id'],
+                $hddData['name'],
+                $hddData['price'],
+                Brand::findById($hddData['brand_id']),
+                $hddData['size'],
+                $hddData['type']
+            );
+        }
+        return $hdds;
+    }
+
+    /**
+     * Récupère un hdd en base de données en fonction de son identifiant
+     *
+     * @param integer $id
+     * @return void
+     */
+    static public function findById(int $id)
+    {
+        // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        $statement = $databaseHandler->prepare('SELECT * FROM `hdds`');
+        $statement->execute([':id' => $id]);
+        $hddData = $statement->fetch();
+        if ($hddData === false) {
+            return null;
+        }
+        return new Hdd(
+            $hddData['id'],
+            $hddData['name'],
+            $hddData['price'],
+            Brand::findById($hddData['brand_id']),
+            $hddData['size'],
+            $hddData['type']
+        );
+    }
+
     /**
      * Crée un nouveau composant
      *

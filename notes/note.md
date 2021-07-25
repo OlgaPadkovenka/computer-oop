@@ -1,6 +1,6 @@
 1. Je crée un dossier models où j'aurai les class.
 2. Je crée la classe Brand avec les propriaités qui corespondent aux colonnes dans la base de donées (id, name, country) dans le fichier Brand.php.
-3. Dans le fichier Cpu.php, je crée la classe Cpu (id, name, price, clock cores). Dans la classe Cpu, il y a une clée étrangère vers brand (brand_id). Je voudrais avec la classe Brand dans la classe Cpu. 
+3. Dans le fichier Cpu.php, je crée la classe Cpu (id, name, price, clock cores). Dans la classe Cpu, il y a une clée étrangère vers brand (brand_id). J'ajoute la classe Brand dans la classe Cpu. 
     /**
      * Marque du composant
      * @var Brand|null
@@ -149,3 +149,45 @@ P.S. Pour des fichiers essentiels, je peux utiliser require_once './models/Brand
             </select>
 
 17. Methodologie: J'ajoute une méthode dans la classe qui permet chercher l'info. J'appelle la métode dont l'info j'ai besoin. Puis, je fait une boucle à l'intérieur de la page pour l'afficher. 
+
+18. component.md
+
+19. Je crée une méthode FindById dans le fichier Brand.php.
+Cette méthode va chercher toutes les marques. 
+Je configue la connexion à la base de donée et je renvoie une requette.
+
+  public function findById(int $id): ?Brand
+    {
+        // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        $statement = $databaseHandler->prepare('SELECT * FROM `brands`
+        WHERE `id` = :id
+    ');
+        $statement->execute([':id' => $id]);
+        $brandData = $statement->fetch();
+    }
+
+20. J'ajoute la condition dans la methode findById() qui dit que si $brandData est vide, ca m'envoie null, sinon, ca m'envoie un nouvelle objet Brand avec un id, name, country. 
+ if ($brandData === false) {
+            return null;
+        }
+          return new Brand(
+            $brandData['id'],
+            $brandData['name'],
+            $brandData['country']
+        );
+
+21. Dans Cpu.php j'ai fait une requette avec une jointure (avec la table brands). Maintenant, je peux supprimer la jointure. 
+Je laisse que cette requette:
+ $statement = $databaseHandler->prepare('SELECT * FROM `cpus`');
+
+ return new Cpu(
+            $cpuData['id'],
+            $cpuData['name'],
+            $cpuData['price'],
+            Brand::findById($cpuData['brand_id']),
+            $cpuData['clock'],
+            $cpuData['cores']
+        );
+
+22. 

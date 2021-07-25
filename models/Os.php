@@ -3,7 +3,7 @@
 /**
  * Réprésente un systéme d'exploitation
  */
-class Hdd
+class Os
 {
     /**
      * Identifiant en base de données
@@ -25,6 +25,42 @@ class Hdd
      * @var Brand|null
      */
     private ?Brand $brand;
+
+    static public function findAll(): array
+    {
+        // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        // Envoie une requête dans le serveur de base de données
+        $statement = $databaseHandler->prepare('SELECT * FROM `os`');
+        // Récupère tous les résultats de la requête
+        foreach ($statement->fetchAll() as $osData) {
+            $os[] = new Os(
+                $osData['id'],
+                $osData['name'],
+                $osData['price'],
+                Brand::findById($osData['brand_id'])
+            );
+        }
+        return $os;
+    }
+
+    static public function findById(int $id)
+    {
+        // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        $statement = $databaseHandler->prepare('SELECT * FROM `os`');
+        $statement->execute([':id' => $id]);
+        $osData = $statement->fetch();
+        if ($osData === false) {
+            return null;
+        }
+        return new Os(
+            $osData['id'],
+            $osData['name'],
+            $osData['price'],
+            Brand::findById($osData['brand_id'])
+        );
+    }
 
     /**
      * Crée un nouveau composant

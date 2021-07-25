@@ -135,24 +135,14 @@ class Cpu
         // Configure la connexion à la base de données
         $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
         // Envoie une requête dans le serveur de base de données
-        $statement = $databaseHandler->query('SELECT
-              `cpus`.*,
-              `brands`.`name` as `brand_name`,
-              `brands`.`country` as `brand_country`
-              FROM `cpus`
-              JOIN `brands` ON `cpus`.`brand_id` = `brands`.`id`
-          ');
+        $statement = $databaseHandler->prepare('SELECT * FROM `cpus`');
         // Récupère tous les résultats de la requête
         foreach ($statement->fetchAll() as $cpuData) {
             $cpus[] = new Cpu(
                 $cpuData['id'],
                 $cpuData['name'],
                 $cpuData['price'],
-                new Brand(
-                    $cpuData['brand_id'],
-                    $cpuData['brand_name'],
-                    $cpuData['brand_country']
-                ),
+                Brand::findById($cpuData['brand_id']),
                 $cpuData['clock'],
                 $cpuData['cores']
             );
@@ -160,18 +150,17 @@ class Cpu
         return $cpus;
     }
 
+    /**
+     * Récupère un processeur en base de données en fonction de son identifiant
+     *
+     * @param integer $id
+     * @return void
+     */
     static public function findById(int $id)
     {
         // Configure la connexion à la base de données
         $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
-        $statement = $databaseHandler->prepare('SELECT
-            `cpus`.*,
-            `brands`.`name` as `brand_name`,
-            `brands`.`country` as `brand_country`
-            FROM `cpus`
-            JOIN `brands` ON `cpus`.`brand_id` = `brands`.`id`
-            WHERE `cpus`.`id` = :id
-        ');
+        $statement = $databaseHandler->prepare('SELECT * FROM `cpus`');
         $statement->execute([':id' => $id]);
         $cpuData = $statement->fetch();
         if ($cpuData === false) {
@@ -181,11 +170,7 @@ class Cpu
             $cpuData['id'],
             $cpuData['name'],
             $cpuData['price'],
-            new Brand(
-                $cpuData['brand_id'],
-                $cpuData['brand_name'],
-                $cpuData['brand_country']
-            ),
+            Brand::findById($cpuData['brand_id']),
             $cpuData['clock'],
             $cpuData['cores']
         );

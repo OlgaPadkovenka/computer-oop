@@ -1,5 +1,3 @@
-<?php require_once 'data/config.php'; ?>
-
 <!DOCTYPE html>
 <html lang="en">
 

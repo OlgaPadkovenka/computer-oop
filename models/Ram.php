@@ -3,7 +3,7 @@
 /**
  * Réprésente uné mémoire vive
  */
-class Hdd
+class Ram
 {
     /**
      * Identifiant en base de données
@@ -35,6 +35,46 @@ class Hdd
      * @var integer
      */
     private int $chipsetCount;
+
+    static public function findAll(): array
+    {
+        // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        // Envoie une requête dans le serveur de base de données
+        $statement = $databaseHandler->prepare('SELECT * FROM `rams`');
+        // Récupère tous les résultats de la requête
+        foreach ($statement->fetchAll() as $ramData) {
+            $rams[] = new Ram(
+                $ramData['id'],
+                $ramData['name'],
+                $ramData['price'],
+                Brand::findById($ramData['brand_id']),
+                $ramData['chipsetSize'],
+                $ramData['chipsetCount']
+            );
+        }
+        return $rams;
+    }
+
+    static public function findById(int $id)
+    {
+        // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        $statement = $databaseHandler->prepare('SELECT * FROM `rams`');
+        $statement->execute([':id' => $id]);
+        $ramData = $statement->fetch();
+        if ($ramData === false) {
+            return null;
+        }
+        return new Ram(
+            $ramData['id'],
+            $ramData['name'],
+            $ramData['price'],
+            Brand::findById($ramData['brand_id']),
+            $ramData['chipsetSize'],
+            $ramData['chipsetCount']
+        );
+    }
 
     /**
      * Crée un nouveau composant
