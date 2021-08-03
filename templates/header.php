@@ -8,7 +8,7 @@ require_once './models/Ram.php';
 
 $databaseHandler = new SqlDatabaseHandler();
 
-var_dump($databaseHandler->fetchById('cpus', 2));
+var_dump(Cpu::findAll());
 die();
 
 // Récupère tous les processeurs en base de données

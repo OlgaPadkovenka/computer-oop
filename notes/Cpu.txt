@@ -1,0 +1,70 @@
+1. Je voudrais instancier SqlDatabaseHandler de Cpu.
+
+Avant j'avais cela
+
+    static public function findAll(): array
+    {
+        // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        // Envoie une requête dans le serveur de base de données
+        $statement = $databaseHandler->prepare('SELECT * FROM `cpus`');
+        // Récupère tous les résultats de la requête
+        $cpus = [];
+        foreach ($statement->fetchAll() as $cpuData) {
+            $cpus[] = new Cpu(
+                $cpuData['id'],
+                $cpuData['name'],
+                $cpuData['price'],
+                $cpuData['brand_id'],
+                $cpuData['clock'],
+                $cpuData['cores']
+            );
+        }
+        return $cpus;
+    }
+
+Je peux supprimer cette partie:
+  // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        // Envoie une requête dans le serveur de base de données
+        $statement = $databaseHandler->prepare('SELECT * FROM `cpus`');
+        // Récupère tous les résultats de la requête
+        $cpus = [];
+
+2. J'importe SqlDatabaseHandler dans Cpu.php
+
+// Définit le service SqlDatabaseHandler comme dépendance de ce fichier
+ require_once './services/SqlDatabaseHandler.php';
+
+3. $databaseHandler->fetchAll('cpus') 
+
+   static public function findAll(): array
+    {
+        $databaseHandler = new SqlDatabaseHandler();
+
+        foreach ($databaseHandler->fetchAll('cpus') as $cpuData) {
+            $cpus[] = new Cpu(
+                $cpuData['id'],
+                $cpuData['name'],
+                $cpuData['price'],
+                $cpuData['brand_id'],
+                $cpuData['clock'],
+                $cpuData['cores']
+            );
+        }
+        return $cpus;
+    }
+
+4. Si je fais un var_damp dans header.php
+var_dump(Cpu::findAll());
+die();
+Ca m'eenvoie les objets Cpu.
+
+5. Je declare les méthods fetchAll et fetchById de SqlDatabaseHandler comme static. Comme ça, les méthode vont appartenir à la classe et pas à l'objet.
+
+ static public function fetchAll(string $tableName): array
+    {
+
+        $statement = $this->pdo->query('SELECT * FROM `' . $tableName . '`');
+        return $statement->fetchAll();
+    }

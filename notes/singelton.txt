@@ -1,0 +1,43 @@
+1. Je veux utiliser le patern Singelton pour la class SqlDatabaseHandler
+
+ Solution
+
+Toute mise en place d’un singleton est constituée des deux étapes suivantes :
+
+Rendre le constructeur par défaut privé afin d’empêcher les autres objets d’utiliser l’opérateur new avec la classe du singleton.
+Mettre en place une méthode de création statique qui se comporte comme un constructeur. En sous-main, cette méthode appelle le constructeur privé pour créer un objet et le sauvegarde dans un attribut statique. Tous les appels ultérieurs à cette méthode retournent l’objet en cache.
+Si votre code a accès à la classe du singleton, alors il peut appeler sa méthode statique. À chaque appel de cette méthode, c’est toujours le même objet qui est retourné.
+
+2. Je fais le constructeur privé et pas public.
+
+ private function __construct()
+    {
+        $this->pdo = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+    }
+
+Du coup, je ne peux plus ecrire new SqlDatabaseHandler() dans header.php, parce que le constructeur est privé.
+
+3. On va avoir une propriété instance qui est static. Cette propriété appartient à la classe.
+class SqlDatabaseHandler
+{
+    /**
+     * L'unique instance du service
+     * @var 
+     */
+    static private SqlDatabaseHandler $instance;
+
+4. J'ajoute une méthode getInstance() (c'est écrit dans le patern) qui va envoyé une unique instance. Je commence par tester, si l'instance existe, s'il n'existe pas, je la crée, et je renvoie l'instance.
+
+ /**
+      * Récupère l'unique instance du service
+      *
+      * @return void
+      */
+     static public function getInstance()
+     {
+         // Si aucune instance du service n'existe, en crée une, sinon renvoie l'instance existante
+         if (!isset(self::$instance)) {
+             self::$instance = new SqlDatabaseHandler();
+         }
+         return self::$instance;
+     }

@@ -250,3 +250,7 @@ $rams = Ram::findAll();
             </select>
 
 25. SqlDatabaseHandler.txt
+
+26. Cpu.txt
+
+27. Singelton.txt
