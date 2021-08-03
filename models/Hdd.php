@@ -1,4 +1,6 @@
 <?php
+// Définit la classe Brand comme dépendance de ce fichier
+require_once './models/Brand.php';
 
 /**
  * Réprésente un périphérique de stockage
@@ -44,13 +46,14 @@ class Hdd
         $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
         // Envoie une requête dans le serveur de base de données
         $statement = $databaseHandler->prepare('SELECT * FROM `hdds`');
+        $hdds = [];
         // Récupère tous les résultats de la requête
         foreach ($statement->fetchAll() as $hddData) {
             $hdds[] = new Hdd(
                 $hddData['id'],
                 $hddData['name'],
                 $hddData['price'],
-                Brand::findById($hddData['brand_id']),
+                null, //Brand::findById($cpuData['brand_id']),
                 $hddData['size'],
                 $hddData['type']
             );
@@ -78,7 +81,7 @@ class Hdd
             $hddData['id'],
             $hddData['name'],
             $hddData['price'],
-            Brand::findById($hddData['brand_id']),
+            null, //Brand::findById($cpuData['brand_id']),
             $hddData['size'],
             $hddData['type']
         );

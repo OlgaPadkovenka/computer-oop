@@ -1,3 +1,32 @@
+<?php
+require_once './services/SqlDatabaseHandler.php';
+require_once './models/Cpu.php';
+require_once './models/Gpu.php';
+require_once './models/Hdd.php';
+require_once './models/Os.php';
+require_once './models/Ram.php';
+
+$databaseHandler = new SqlDatabaseHandler();
+
+var_dump($databaseHandler->fetchById('cpus', 2));
+die();
+
+// Récupère tous les processeurs en base de données
+$cpus = Cpu::findAll();
+
+// Récupère tous les gpu en base de données
+$gpus = Gpu::findAll();
+
+// Récupère tous les hdd en base de données
+$hdds = Hdd::findAll();
+
+// Récupère tous les os en base de données
+$oss = Os::findAll();
+
+// Récupère tous les ram en base de données
+$rams = Ram::findAll();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,7 +64,7 @@
                             </div>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <?php foreach ($gpus as $gpu) : ?>
-                                    <li><a class="dropdown-item" href="/component.php"><?= $gpu['name'] ?></a></li>
+                                    <li><a class="dropdown-item" href="/component.php?type=cpu&id<?= $cpu->getId() ?>"><?= $gpu->getName() ?></a></li>
                                 <?php endforeach; ?>
                             </ul>
                         </li>
@@ -45,7 +74,7 @@
                             </div>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <?php foreach ($hdds as $hdd) : ?>
-                                    <li><a class="dropdown-item" href="/component.php"><?= $hdd['name'] ?></a></li>
+                                    <li><a class="dropdown-item" href="/component.php?type=hdd&id<?= $hdd->getId() ?>"><?= $hdd->getName() ?></a></li>
                                 <?php endforeach; ?>
                             </ul>
                         </li>
@@ -55,7 +84,7 @@
                             </div>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <?php foreach ($oss as $os) : ?>
-                                    <li><a class="dropdown-item" href="/component.php"><?= $os['name'] ?></a></li>
+                                    <li><a class="dropdown-item" href="/component.php?type=os&id<?= $os->getId() ?>"><?= $os->getName() ?></a></li>
                                 <?php endforeach; ?>
                             </ul>
                         </li>
@@ -65,7 +94,7 @@
                             </div>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <?php foreach ($rams as $ram) : ?>
-                                    <li><a class="dropdown-item" href="/component.php"><?= $ram['name'] ?></a></li>
+                                    <li><a class="dropdown-item" href="/component.php?type=ram&id<?php $ram->getId() ?>"><?= $ram->getName() ?></a></li>
                                 <?php endforeach; ?>
                             </ul>
                         </li>

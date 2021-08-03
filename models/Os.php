@@ -1,5 +1,8 @@
 <?php
 
+// Définit la classe Brand comme dépendance de ce fichier
+require_once './models/Brand.php';
+
 /**
  * Réprésente un systéme d'exploitation
  */
@@ -32,16 +35,17 @@ class Os
         $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
         // Envoie une requête dans le serveur de base de données
         $statement = $databaseHandler->prepare('SELECT * FROM `os`');
+        $oss = [];
         // Récupère tous les résultats de la requête
         foreach ($statement->fetchAll() as $osData) {
-            $os[] = new Os(
+            $oss[] = new Os(
                 $osData['id'],
                 $osData['name'],
                 $osData['price'],
-                Brand::findById($osData['brand_id'])
+                null, //Brand::findById($cpuData['brand_id']),
             );
         }
-        return $os;
+        return $oss;
     }
 
     static public function findById(int $id)
@@ -58,7 +62,7 @@ class Os
             $osData['id'],
             $osData['name'],
             $osData['price'],
-            Brand::findById($osData['brand_id'])
+            null, //Brand::findById($cpuData['brand_id']),
         );
     }
 

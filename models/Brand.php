@@ -23,7 +23,7 @@ class Brand
      */
     private string $country;
 
-    public function findById(int $id): ?Brand
+    static public function findById(int $id): ?Brand
     {
         // Configure la connexion à la base de données
         $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
@@ -42,6 +42,13 @@ class Brand
         );
     }
 
+    /**
+     * Crée une nouvelle marque
+     *
+     * @param integer|null $id Identifiant en base de données
+     * @param string $name Nom de la marque
+     * @param string $country Nom du pays dans lequel la marque est enregistrée
+     */
     public function __construct(
         ?int $id = null,
         string $name = '',

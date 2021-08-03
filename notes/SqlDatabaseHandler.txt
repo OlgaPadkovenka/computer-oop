@@ -1,0 +1,64 @@
+1. Je crée un dossier services. Dedans,je crée un fichier SqlDatabaseHandler.php. Dans le fichier SqlDatabaseHandler.php, je crée une class SqlDatabaseHandler. 
+
+class SqlDatabaseHandler
+{
+    private PDO $pdo; - une propriété
+
+    /**
+     * L'unique instance du service
+     * @var 
+     */
+    public function __construct()
+    {
+        $this->pdo = new PDO("mysql:host;dbname=php-config", 'route', 'route');
+    }
+
+2. J'inclus le fichier SqlDatabaseHandler.php à l'index.php avec l'import des classes.
+require_once './services/SqlDatabaseHandler.php';
+
+$databaseHandler = new SqlDatabaseHandler();
+
+3. Dans le fichier SqlDatabaseHandler.php, je crée une méthode qui va me chercher toutes les inrégistrements d'une table et qui aura comme un paramètre le nom de la table.
+
+ return $statement->fetchAll(); cela veut dire - renvoie-moi tous les résultat de la requette.
+
+  public function fetchAll(string $tableName)
+    {
+        $statement = $this->pdo->query('SELECT * FROM `' . $tableName . '`');
+        return $statement->fetchAll();
+    }
+}
+
+4. Pour vérifier que ça marche, je peux faire un var_dump() dans header.php qui me cherche tous les cpus.
+
+$databaseHandler = new SqlDatabaseHandler();
+
+var_dump($databaseHandler->fetchAll('cpus'));
+die();
+
+5. Je crée une nouvelle méthode dans SqlDatabaseHandler.php qui me permettra chercher par un id.
+
+  public function fetchId(string $tableName, int $id)
+    {
+        $statement = $this->pdo->prepare('SELECT * FROM `' . $tableName . '` WHERE `id` = :id');
+        $statement->execute([':id' => $id]);
+        $result = $statement->fetch();
+        return $result;
+    }
+
+6. J'ajoute la condition, si un id n'existe pas, je retourne null.
+   public function fetchId(string $tableName, int $id)
+    {
+        $statement = $this->pdo->prepare('SELECT * FROM `' . $tableName . '` WHERE `id` = :id');
+        $statement->execute([':id' => $id]);
+        $result = $statement->fetch();
+        if ($result === false) {
+            return null;
+        }
+        return $result;
+    }
+
+7. Pour le vérifier, je peux faire un var_dump() à header.php
+var_dump($databaseHandler->fetchById('cpus', 2));
+die();
+

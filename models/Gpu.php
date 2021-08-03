@@ -1,5 +1,8 @@
 <?php
 
+// Définit la classe Brand comme dépendance de ce fichier
+require_once './models/Brand.php';
+
 /**
  * Réprésente une carte graphique
  */
@@ -49,7 +52,7 @@ class Gpu
                 $gpuData['id'],
                 $gpuData['name'],
                 $gpuData['price'],
-                Brand::findById($gpuData['brand_id']),
+                null, //Brand::findById($cpuData['brand_id']),
                 $gpuData['ram']
             );
         }
@@ -76,7 +79,7 @@ class Gpu
             $gpuData['id'],
             $gpuData['name'],
             $gpuData['price'],
-            Brand::findById($gpuData['brand_id']),
+            null, //Brand::findById($cpuData['brand_id']),
             $gpuData['ram']
         );
     }

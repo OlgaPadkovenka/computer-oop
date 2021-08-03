@@ -1,5 +1,7 @@
 1. Je crée un dossier models où j'aurai les class.
+
 2. Je crée la classe Brand avec les propriaités qui corespondent aux colonnes dans la base de donées (id, name, country) dans le fichier Brand.php.
+
 3. Dans le fichier Cpu.php, je crée la classe Cpu (id, name, price, clock cores). Dans la classe Cpu, il y a une clée étrangère vers brand (brand_id). J'ajoute la classe Brand dans la classe Cpu. 
     /**
      * Marque du composant
@@ -50,6 +52,7 @@
 6. Je crée d'autres classes de la même manière.
 
 7. Je crée une méthode static findAll() dans la classe Cpu qui permettra chercher tous les cpus qui renvoie un tableau d'object Cpu. 
+
 Je renvoie une requtte dans la base de donées qui recupère tous les cpus.
 
    static public function findAll(): array
@@ -64,7 +67,27 @@ Je renvoie une requtte dans la base de donées qui recupère tous les cpus.
          $statement->fetchAll();
     }
 
-8. J'ajoute un foreach, et je construis un tableau cpu qui va contenir un nouvel objet Cpu qui va contenir id, name, price, null (pour l'object Brand), clock, cores. Les colonnes corespondent aux tables dans la base de donées et aux propriété de la classe.
+8. J'ajoute un foreach, et je construis un tableau cpu qui va contenir un nouvel objet Cpu qui va contenir id, name, price, null (pour l'object Brand), clock, cores. Les colonnes corespondent à la table dans la base de donées et aux propriété de la classe.
+
+    static public function findAll(): array
+    {
+        // Configure la connexion à la base de données
+        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
+        // Envoie une requête dans le serveur de base de données
+        $statement = $databaseHandler->prepare('SELECT * FROM `cpus`');
+        // Récupère tous les résultats de la requête
+        foreach ($statement->fetchAll() as $cpuData) {
+            $cpus[] = new Cpu(
+                $cpuData['id'],
+                $cpuData['name'],
+                $cpuData['price'],
+                null,
+                $cpuData['clock'],
+                $cpuData['cores']
+            );
+        }
+        return $cpus;
+    }
 
 P.S. Je mets l'objet Brand à null, parce que dans la requette (étape 7) je cherche que les cpus et pas Brand.
 
@@ -82,8 +105,10 @@ P.S. Je mets l'objet Brand à null, parce que dans la requette (étape 7) je che
          }
          return $cpus;
 
-P.S. Si je ne fais pas return, je ne renvoie pas de valeurs (les résultats de la fonctionne). Qund je vais faire 
-<?php $cpus = Cpu::findAll() ?>, $cpus sera égale à rien. 
+P.S. Si je ne fais pas return, je ne renvoie pas de valeurs (les résultats de la fonctionne).
+Quand je vais faire 
+<?php $cpus = Cpu::findAll() ?>,
+$cpus sera égale à rien. 
 $cpus sera égale à null.
 
 10. Je vais dans le fichier index.php où j'inclus le fichier Cpu.php
@@ -126,18 +151,19 @@ Pour voir que cela marche, je peux faire un var_damp() dans Cpu.php dans la bouc
         }
         return $cpus;
 
-14. La class Cpu ne marche pas comme il faut, parce que je n'ai pas importé la classe Brand dedans.
+14. J'importe la classe Brand dans la class CPU.
 
 include './models/Brand.php';
 
-15. include marche comme un copier-coller. Quand je vais inclure Brand.php dans la class Gpu(après avoir inclut dans le Cpu.php), par exemple, ca ne peut pas fonctionner, parce que le fichier sera déjà inclut dans index.php une fois, il pourra pas être inclus deuxième fois.
+15. include marche comme un copier-coller.
+Quand je vais inclure Brand.php dans la class Gpu(après avoir inclut dans le Cpu.php), par exemple, ca ne peut pas fonctionner, parce que le fichier sera déjà inclut dans index.php une fois, il pourra pas être inclus deuxième fois.
 Pour éviter ce problème, je peux utiliser include_once. Comme ca le fichier sera inclut qu'une seule fois à index.php. 
 
 include_once './models/Brand.php';
 
 P.S. Pour des fichiers essentiels, je peux utiliser require_once './models/Brand.php';
 
-16. J'affiche les cpus dans le html. Avec intval($cpuIndex) je transforme index qui était un chaîne de caractère en nombre.
+16. J'affiche les cpus dans le html. Avec intval($cpuIndex) je transforme l'index qui était un chaîne de caractère en nombre.
 
     <label for="cpu">Processeur</label>
             <select name="cpu" class="form-control">
@@ -148,9 +174,9 @@ P.S. Pour des fichiers essentiels, je peux utiliser require_once './models/Brand
                 <?php endforeach; ?>
             </select>
 
-17. Methodologie: J'ajoute une méthode dans la classe qui permet chercher l'info. J'appelle la métode dont l'info j'ai besoin. Puis, je fait une boucle à l'intérieur de la page pour l'afficher. 
+17. Methodologie: J'ajoute une méthode dans la classe qui permet chercher l'info. J'appelle la méthode dont l'info j'ai besoin. Puis, je fait une boucle à l'intérieur de la page pour l'afficher. 
 
-18. component.md
+18. component.txt
 
 19. Je crée une méthode FindById dans le fichier Brand.php.
 Cette méthode va chercher toutes les marques. 
@@ -167,7 +193,9 @@ Je configue la connexion à la base de donée et je renvoie une requette.
         $brandData = $statement->fetch();
     }
 
-20. J'ajoute la condition dans la methode findById() qui dit que si $brandData est vide, ca m'envoie null, sinon, ca m'envoie un nouvelle objet Brand avec un id, name, country. 
+20. J'ajoute la condition dans la methode findById().
+Je dis que si $brandData est vide, ca m'envoie null, sinon, ca m'envoie un nouvelle objet Brand avec un id, name, country. 
+
  if ($brandData === false) {
             return null;
         }
@@ -177,7 +205,7 @@ Je configue la connexion à la base de donée et je renvoie une requette.
             $brandData['country']
         );
 
-21. Dans Cpu.php j'ai fait une requette avec une jointure (avec la table brands). Maintenant, je peux supprimer la jointure. 
+21. Dans Cpu.php, j'ai fait une requette avec une jointure (avec la table brands). Maintenant, je peux supprimer la jointure. 
 Je laisse que cette requette:
  $statement = $databaseHandler->prepare('SELECT * FROM `cpus`');
 
@@ -190,4 +218,35 @@ Je laisse que cette requette:
             $cpuData['cores']
         );
 
-22. 
+22. De la même manière, je peux faire d'autres classes.
+
+23. Dans l'index j'ajoute 
+
+<?php
+// Récupère tous les processeurs en base de données
+$cpus = Cpu::findAll();
+
+// Récupère tous les gpu en base de données
+$gpus = Gpu::findAll();
+
+// Récupère tous les hdd en base de données
+$hdds = Hdd::findAll();
+
+// Récupère tous les os en base de données
+$oss = Os::findAll();
+
+// Récupère tous les ram en base de données
+$rams = Ram::findAll();
+?>
+
+24. Je modifie à l'index
+
+   <select name="ram" class="form-control">
+                <?php foreach ($rams as $index => $ram) : ?>
+                    <option value="<?= $ram->getId() ?>" <?php if (intval($ramIndex) === $ram->getId()) {
+                                                                echo 'selected';
+                                                            } ?>><?= $ram->ramName() ?></option>
+                <?php endforeach; ?>
+            </select>
+
+25. SqlDatabaseHandler.txt

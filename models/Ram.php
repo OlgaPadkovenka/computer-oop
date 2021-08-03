@@ -1,4 +1,6 @@
 <?php
+// Définit la classe Brand comme dépendance de ce fichier
+require_once './models/Brand.php';
 
 /**
  * Réprésente uné mémoire vive
@@ -42,13 +44,14 @@ class Ram
         $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
         // Envoie une requête dans le serveur de base de données
         $statement = $databaseHandler->prepare('SELECT * FROM `rams`');
+        $rams = [];
         // Récupère tous les résultats de la requête
         foreach ($statement->fetchAll() as $ramData) {
             $rams[] = new Ram(
                 $ramData['id'],
                 $ramData['name'],
                 $ramData['price'],
-                Brand::findById($ramData['brand_id']),
+                null, //Brand::findById($cpuData['brand_id']),
                 $ramData['chipsetSize'],
                 $ramData['chipsetCount']
             );
@@ -70,7 +73,7 @@ class Ram
             $ramData['id'],
             $ramData['name'],
             $ramData['price'],
-            Brand::findById($ramData['brand_id']),
+            null, //Brand::findById($cpuData['brand_id']),
             $ramData['chipsetSize'],
             $ramData['chipsetCount']
         );

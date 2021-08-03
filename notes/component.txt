@@ -1,4 +1,5 @@
 1. Sur cette page, je voudrais faire afficher un composant en particulier.
+
 2. Dans header.php je trouve un menu déroulant de cpu où j'ajoute dans le lien 
 ?type=cpu&id=<?= $cpu['id'] ?> pour afficher un cpu.
 
