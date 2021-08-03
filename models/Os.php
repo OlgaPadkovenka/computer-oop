@@ -1,5 +1,6 @@
 <?php
-
+// Définit le service SqlDatabaseHandler comme dépendance de ce fichier
+require_once './services/SqlDatabaseHandler.php';
 // Définit la classe Brand comme dépendance de ce fichier
 require_once './models/Brand.php';
 
@@ -31,13 +32,8 @@ class Os
 
     static public function findAll(): array
     {
-        // Configure la connexion à la base de données
-        $databaseHandler = new PDO("mysql:host=localhost;dbname=php-config", 'root', 'root');
-        // Envoie une requête dans le serveur de base de données
-        $statement = $databaseHandler->prepare('SELECT * FROM `os`');
-        $oss = [];
         // Récupère tous les résultats de la requête
-        foreach ($statement->fetchAll() as $osData) {
+        foreach (SqlDatabaseHandler::fetchAll('os') as $osData) {
             $oss[] = new Os(
                 $osData['id'],
                 $osData['name'],

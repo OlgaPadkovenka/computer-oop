@@ -6,11 +6,6 @@ require_once './models/Hdd.php';
 require_once './models/Os.php';
 require_once './models/Ram.php';
 
-$databaseHandler = new SqlDatabaseHandler();
-
-var_dump(Cpu::findAll());
-die();
-
 // Récupère tous les processeurs en base de données
 $cpus = Cpu::findAll();
 
@@ -54,7 +49,7 @@ $rams = Ram::findAll();
                             </div>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <?php foreach ($cpus as $cpu) : ?>
-                                    <li><a class="dropdown-item" href="/component.php"><?= $cpu['name'] ?></a></li>
+                                    <li><a class="dropdown-item" href="/component.php"><?= $cpu->getName() ?></a></li>
                                 <?php endforeach; ?>
                             </ul>
                         </li>

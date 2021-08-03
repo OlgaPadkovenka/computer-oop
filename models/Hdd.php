@@ -1,4 +1,6 @@
 <?php
+// Définit le service SqlDatabaseHandler comme dépendance de ce fichier
+require_once './services/SqlDatabaseHandler.php';
 // Définit la classe Brand comme dépendance de ce fichier
 require_once './models/Brand.php';
 
@@ -48,7 +50,7 @@ class Hdd
         $statement = $databaseHandler->prepare('SELECT * FROM `hdds`');
         $hdds = [];
         // Récupère tous les résultats de la requête
-        foreach ($statement->fetchAll() as $hddData) {
+        foreach (SqlDatabaseHandler::fetchAll('hdds') as $hddData) {
             $hdds[] = new Hdd(
                 $hddData['id'],
                 $hddData['name'],

@@ -41,3 +41,28 @@ class SqlDatabaseHandler
          }
          return self::$instance;
      }
+
+5. 
+ static public function fetchAll(string $tableName): array
+    {
+
+        $statement = self::getInstance()->pdo->query('SELECT * FROM `' . $tableName . '`');
+        return $statement->fetchAll();
+    }
+
+6. 
+   static public function findAll(): array
+    {
+
+        // Récupère tous les résultats de la requête
+        foreach (SqlDatabaseHandler::fetchAll('gpus') as $gpuData) {
+            $gpus[] = new Gpu(
+                $gpuData['id'],
+                $gpuData['name'],
+                $gpuData['price'],
+                null, //Brand::findById($cpuData['brand_id']),
+                $gpuData['ram']
+            );
+        }
+        return $gpus;
+    }

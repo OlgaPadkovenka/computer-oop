@@ -26,7 +26,6 @@ class SqlDatabaseHandler
     }
 
     private PDO $pdo;
-
     /**
      * L'unique instance du service
      * @var 
@@ -45,7 +44,7 @@ class SqlDatabaseHandler
     static public function fetchAll(string $tableName): array
     {
 
-        $statement = $this->pdo->query('SELECT * FROM `' . $tableName . '`');
+        $statement = self::getInstance()->pdo->query('SELECT * FROM `' . $tableName . '`');
         return $statement->fetchAll();
     }
 
@@ -58,7 +57,7 @@ class SqlDatabaseHandler
      */
     static public function fetchById(string $tableName, int $id): ?array
     {
-        $statement = $this->pdo->prepare('SELECT * FROM `' . $tableName . '` WHERE `id` = :id');
+        $statement = self::getInstance()->pdo->prepare('SELECT * FROM `' . $tableName . '` WHERE `id` = :id');
         $statement->execute([':id' => $id]);
         $result = $statement->fetch();
         if ($result === false) {

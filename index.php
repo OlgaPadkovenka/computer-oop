@@ -70,7 +70,7 @@ if (isset($_GET['ram'])) {
                 <?php foreach ($rams as $index => $ram) : ?>
                     <option value="<?= $ram->getId() ?>" <?php if (intval($ramIndex) === $ram->getId()) {
                                                                 echo 'selected';
-                                                            } ?>><?= $ram->ramName() ?></option>
+                                                            } ?>><?= $ram->getName() ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -90,7 +90,7 @@ if (isset($_GET['ram'])) {
                 <?php foreach ($hdds as $index => $hdd) : ?>
                     <option value="<?= $hdd->getId() ?>" <?php if (intval($hddIndex) === $index) {
                                                                 echo 'selected';
-                                                            } ?>><?= $hdd->geName() ?></option>
+                                                            } ?>><?= $hdd->getName() ?></option>
                 <?php endforeach; ?>
             </select>
         </div>

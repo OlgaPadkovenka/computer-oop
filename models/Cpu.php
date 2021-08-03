@@ -55,14 +55,14 @@ class Cpu
         ?int $id = null,
         string $name = '',
         float $price = 0,
-        ?Brand $brand = null,
+        ?int $brandId = null,
         int $clock = 0,
         int $cores = 0
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->price = $price;
-        $this->brand = $brand;
+        $this->brandId = $brandId;
         $this->clock = $clock;
         $this->cores = $cores;
     }
@@ -135,9 +135,9 @@ class Cpu
      */
     static public function findAll(): array
     {
-        $databaseHandler = new SqlDatabaseHandler();
+        //$databaseHandler = new SqlDatabaseHandler();
 
-        foreach ($databaseHandler->fetchAll('cpus') as $cpuData) {
+        foreach (SqlDatabaseHandler::fetchAll('cpus') as $cpuData) {
             $cpus[] = new Cpu(
                 $cpuData['id'],
                 $cpuData['name'],
