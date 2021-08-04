@@ -1,5 +1,5 @@
 <?php
-require_once './services/SqlDatabaseHandler.php';
+
 require_once './models/Cpu.php';
 require_once './models/Gpu.php';
 require_once './models/Hdd.php';
