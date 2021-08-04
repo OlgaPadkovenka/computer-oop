@@ -254,3 +254,17 @@ $rams = Ram::findAll();
 26. Cpu.txt
 
 27. Singelton.txt
+
+28. Je crée une class Component qui contient id, name, price, brand comment tous les autres cpu, gpu etc.
+
+29. Dans toutes les classe je supprime les propriétés: id, name, price, brand qui vont exister dans Component.php et les getteurs. Le constructeur, je ne modifie pas.
+
+30. J'ajoute 
+class Cpu extends Component
+{}
+
+31. Je change les propriétés de la classe Component de private à protected.
+
+32. Il faut importer Component.php partout.
+// Définit le service SqlDatabaseHandler comme dépendance de ce fichier
+require_once './models/Component.php';
