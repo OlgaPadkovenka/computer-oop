@@ -80,10 +80,7 @@ class Gpu extends Component
         ?int $brandId = null,
         int $ram = 0
     ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->price = $price;
-        $this->brandId = $brandId;
+        parent::__construct($id, $name, $price, $brandId);
         $this->ram = $ram;
     }
 

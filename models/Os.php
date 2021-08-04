@@ -9,7 +9,7 @@ require_once './models/Brand.php';
 /**
  * Réprésente un systéme d'exploitation
  */
-class Os
+class Os extends Component
 {
 
     static public function findAll(): array
@@ -56,11 +56,8 @@ class Os
         ?int $id = null,
         string $name = '',
         float $price = 0,
-        ?Brand $brand = null
+        ?int $brandId = null,
     ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->price = $price;
-        $this->brand = $brand;
+        parent::__construct($id, $name, $price, $brandId);
     }
 }

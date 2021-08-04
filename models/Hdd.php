@@ -9,7 +9,7 @@ require_once './models/Brand.php';
 /**
  * Réprésente un périphérique de stockage
  */
-class Hdd
+class Hdd extends Component
 {
     /**
      * Capacité de stockage
@@ -88,10 +88,7 @@ class Hdd
         int $size = 0,
         int $type = 0
     ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->price = $price;
-        $this->brandId = $brandId;
+        parent::__construct($id, $name, $price, $brandId);
         $this->size = $size;
         $this->type = $type;
     }

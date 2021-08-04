@@ -23,8 +23,12 @@ class Component
      */
     protected ?int $brandId;
 
-    public function __construct(?int $id, string $name, float $price, ?int $brandId)
-    {
+    public function __construct(
+        ?int $id,
+        string $name,
+        float $price,
+        ?int $brandId
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->price = $price;

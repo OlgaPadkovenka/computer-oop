@@ -9,7 +9,7 @@ require_once './models/Brand.php';
 /**
  * Réprésente uné mémoire vive
  */
-class Ram
+class Ram extends Component
 {
     /**
      * Capacité de chaque barrette
@@ -72,14 +72,11 @@ class Ram
         ?int $id = null,
         string $name = '',
         float $price = 0,
-        ?Brand $brand = null,
+        ?int $brandId = null,
         int $chipsetSize = 0,
         int $chipsetCount = 1
     ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->price = $price;
-        $this->brand = $brand;
+        parent::__construct($id, $name, $price, $brandId);
         $this->chipsetSize = $chipsetSize;
         $this->chipsetCount = $chipsetCount;
     }

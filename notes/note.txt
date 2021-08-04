@@ -259,12 +259,55 @@ $rams = Ram::findAll();
 
 29. Dans toutes les classe je supprime les propriétés: id, name, price, brand qui vont exister dans Component.php et les getteurs. Le constructeur, je ne modifie pas.
 
-30. J'ajoute 
+30. Il faut importer Component.php partout.
+// Définit le service SqlDatabaseHandler comme dépendance de ce fichier
+require_once './models/Component.php';
+
+31. J'ajoute 
 class Cpu extends Component
 {}
 
-31. Je change les propriétés de la classe Component de private à protected.
 
-32. Il faut importer Component.php partout.
-// Définit le service SqlDatabaseHandler comme dépendance de ce fichier
-require_once './models/Component.php';
+32. Je change les propriétés de la classe Component de private à protected.
+private que la classe peut accéder aux propriétés.
+protected - la classe et ses ascendants et ses descendants peuvent accéder aux propriétés.
+
+Dans la classe déscendant, je peux redéfinir la superclass. Les méthodes écrites dans les sous-classes elles prennent le pas récrivent les méthodes de super-class. (polimorfisme).
+
+Dans une méthode de la sous-classe, je peux appeler le code d'une méthode de la super-classe.
+
+
+
+33. C'est le constructeur de la Cpu.
+   public function __construct(
+        ?int $id = null,
+        string $name = '',
+        float $price = 0,
+        ?int $brandId = null,
+        int $clock = 0,
+        int $cores = 0
+    ) {
+
+        $this->id = $id;
+        $this->name = $name;
+        $this->price = $price;
+        $this->brandId = $brandId;
+        $this->clock = $clock;
+        $this->cores = $cores;
+    }
+
+    Je peux supprimer les propriété communes avec la super-classe pour appeler la methode conctruct de la super-classe Component.
+
+       public function __construct(
+        ?int $id = null,
+        string $name = '',
+        float $price = 0,
+        ?int $brandId = null,
+        int $clock = 0,
+        int $cores = 0
+    ) {
+
+        parent::__construct($id, $name, $price, $brandId);
+        $this->clock = $clock;
+        $this->cores = $cores;
+    }
